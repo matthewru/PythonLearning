@@ -1,0 +1,15 @@
+import turtle
+hex = turtle.Pen()
+hex.forward(200)
+hex.right(60)
+hex.forward(200)
+hex.right(60)
+hex.forward(200)
+hex.right(60)
+hex.forward(200)
+hex.right(60)
+hex.forward(200)
+hex.right(60)
+hex.forward(200)
+hex.left(60)
+

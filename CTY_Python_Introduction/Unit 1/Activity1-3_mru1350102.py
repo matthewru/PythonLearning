@@ -1,0 +1,1 @@
+print("My is Matthew Ru and I am taking Introduction to Python Programming for Middle School Students. I am taking this course because I want to learn more programming languages and I think Python is a fun and useful language to learn.")

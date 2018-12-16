@@ -1,0 +1,11 @@
+import turtle
+star = turtle.Pen()
+star.forward(250)
+star.right(144)
+star.forward(250)
+star.right(144)
+star.forward(250)
+star.right(144)
+star.forward(250)
+star.right(144)
+star.forward(250)
