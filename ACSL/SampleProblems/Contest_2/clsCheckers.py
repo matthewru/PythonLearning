@@ -7,22 +7,27 @@ class Checkers:
         self.king = king
         self.jumps = jumps
 
-    def jump(self, opLocation):
+    def jumpOne(self, opLocation):
         if self.canJump(opLocation):
             self.location = self.attempt(opLocation)
             self.capture(opLocation)
 
-
     def jump(self):
-        adjacentLocations = self.adjacentLocations()
-        opLocation = adjacentLocations[0]
-        while self.canJump(opLocation):
-            self.jump(opLocation)
-            adjacentLocations = self.adjacentLocations()
+        adjacentLocations = self.adjacentOpponents()
+        if len(adjacentLocations) == 0:
+            return
+        else:
             opLocation = adjacentLocations[0]
+        while self.canJump(opLocation):
+            self.jumpOne(opLocation)
             self.jumps += 1
             if self.location.row == 8:
                 self.king = True
+            adjacentLocations = self.adjacentOpponents()
+            if len(adjacentLocations) == 0:
+                break
+            else:
+                opLocation = adjacentLocations[0]
 
     def isOccupied(self, location):
         for loc in self.opLocationList:
@@ -31,10 +36,12 @@ class Checkers:
         return False
 
     def canJump(self, opLocation):
-        canJump = self.isAdjacent(opLocation)
+        canJump = self.location.row < 8 and self.location.row > 0
+        canJump &= isinstance(opLocation, Location)
+        canJump &= self.isAdjacent(opLocation)
         canJump &= (opLocation.row != 1 and opLocation.row != 8)
         canJump &= (opLocation.column != 1 and opLocation.column != 8)
-        canJump &= self.isOccupied(self.attempt(opLocation))
+        canJump &= not self.isOccupied(self.attempt(opLocation))
         return canJump
 
     def addOpponentLocation(self, opLocation):
@@ -73,10 +80,10 @@ class Checkers:
                 newLocation.row = opLocation.row + 1
         return newLocation
 
-    def adjacentOpponent(self):
+    def adjacentOpponents(self):
         adjacentLocations = []
         for loc in self.opLocationList:
-            if self.isAdjacent(loc):
+            if self.isAdjacent(loc) and self.canJump(loc):
                 adjacentLocations.append(loc)
         return adjacentLocations
 
