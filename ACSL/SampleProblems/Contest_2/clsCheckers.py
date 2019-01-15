@@ -1,10 +1,10 @@
 from clsLocation import Location
 class Checkers:
 
-    def __init__(self, location, opLocationList = [], king = False, jumps = 0):
+    def __init__(self, location, opLocationList = [], jumps = 0):
         self.location = location
         self.opLocationList = opLocationList
-        self.king = king
+        self.king = True if self.location.row == 8 else False
         self.jumps = jumps
 
     def jumpOne(self, opLocation):
