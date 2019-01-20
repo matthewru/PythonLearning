@@ -3,21 +3,24 @@ class Palindrome:
     def __init__(self, num):
         self.num = num
 
-    def reverseNum(self):
-        return int(str(self.num)[::-1])
+    def reverseNum(self, num):
+        return int(str(num)[::-1])
 
-    def isPalindrome(self):
-        if self.reverseNum() == self.num:
+    def isPalindrome(self, num):
+        if self.reverseNum(num) == num:
             return True
         else: return False
 
-    def makePalindrome(self):
-        if not self.isPalindrome():
+    def makePalindrome(self, num):
+        if not self.isPalindrome(num):
             for count in range(0, 10):
-                self.num = self.reverseNum() + self.num
-                if self.isPalindrome():
+                num = self.reverseNum(num) + num
+                if self.isPalindrome(num):
                     break
-            return self.num
+            return num
         else:
-            return self.num
+            return num
+
+
+
 
