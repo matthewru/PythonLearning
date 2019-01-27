@@ -13,24 +13,24 @@ class Trinomial:
     def __str__(self):
         return self.printTrinomialForm()
 
-    def printTrinomialForm(self):
-        if self.factor > 0:
-            if self.a > 0:
-                return str(self.a) + "(" + "x^2" + " " + "+" + " " + str(int(self.b/self.a)) + "x" + " " + "+" + " " + str(self.c) + ")"
-            else:
-                return (str(self.a) if self.a > 1 else "") + "x^2" + " " + "+" + " " + str(self.b) + "x" + " " + "+" + " " + str(self.c)
-
+    def toStringForm(self, number):
+        if number >= 0:
+            numStr = " + " + str(number)
         else:
-            if self.a > 0:
-                return str(self.a) + "(" + "x^2" + " " + "-" + " " + str(-(int(self.b/self.a))) + "x" + " " + "+" + " " + str(self.c) + ")"
-            else:
-                return (self.a if self.a > 1 else "") + "x^2" + " " + "-" + " " + str(-self.b) + "x" + " " + "+" + " " + str(self.c)
+            numStr = " - " + str(0-number)
+        return numStr
+
+    def printCoefficiantAWrapper(self, internalForm):
+        return "%s%s%s" % (str(self.a) + "(" if self.a > 1 else "", internalForm, (")" if self.a > 1 else ""))
+
+    def printInternalTrinomialForm(self):
+        return "x^2%sx%s" % (self.toStringForm(int(self.b/self.a)), self.toStringForm(self.c))
+
+    def printTrinomialForm(self):
+        return self.printCoefficiantAWrapper(self.printInternalTrinomialForm())
 
     def printPerfectSquareForm(self):
-        if self.factor > 0:
-            return "(" + "x" + " " + "+" + " " + str(self.factor) + ")^2"
-        else:
-            return "(" + "x" + " " + "-" + " " + str(-(self.factor)) + ")^2"
+        return (str(self.a) if self.a > 1 else "") + "(" + "x" + self.toStringForm(self.factor) + ")^2"
 
     def hasPerfectSquare(self):
         pass
