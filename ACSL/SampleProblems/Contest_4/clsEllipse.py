@@ -1,5 +1,5 @@
 from clsTrinomial import Trinomial
-class GeneralForm:
+class Ellipse:
 
     def __init__(self, a, b, c, d, e, f):
         self.a = a
@@ -22,7 +22,7 @@ class GeneralForm:
             return True
 
     def completeSquare(self):
-        xTrinomial = Trinomial(self.a, self.b, self.c)
+        self.xTrinomial = Trinomial(self.a, self.b, self.c)
 
         # In completeSquare
         # 3.1 create X trinomial

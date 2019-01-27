@@ -1,12 +1,23 @@
+import math
 class Trinomial:
-    def __init__(self, a = 0, b = 0, c = 0):
+    def __init__(self, a = 0, b = 0):
         self.a = a
         self.b = b
-        self.c = c
-
-    def factorTrinomial(self):
-        pass
-        # factor into perfect square form : ax^2 + bx + c => (x + a)^2
+        self.completeSquare()
 
     def completeSquare(self):
-        pass
+        self.c = int((self.b / 2) ** 2)
+        self.factor = int(math.sqrt(self.c)) if self.b >= 0 else int(-math.sqrt(self.c))
+        return
+
+    def __str__(self):
+        return self.printTrinomialForm()
+
+    def printTrinomialForm(self):
+        return (str(self.a) if self.a > 1 else "") + "x^2" + " " + "+" + " " + str(self.b) + "x" + " " + "+" + " " + str(self.c)
+
+    def printPerfectSquareForm(self):
+        if self.factor > 0:
+            return "(" + "x" + " " + "+" + " " + str(self.factor) + ")^2"
+        elif self.factor < 0:
+            return "(" + "x" + " " + "-" + " " + str(-(self.factor)) + ")^2"
