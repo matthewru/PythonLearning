@@ -30,7 +30,10 @@ class Trinomial:
         return self.printCoefficiantAWrapper(self.printInternalTrinomialForm())
 
     def printPerfectSquareForm(self):
-        return (str(self.a) if self.a > 1 else "") + "(" + "x" + self.toStringForm(self.factor) + ")^2"
+        return (str(self.a) if self.a > 1 else "") + "(" + "x" + (self.toStringForm(self.factor) if self.factor != 0 else "") + ")^2"
+
+    def printInternalPerfectSquareForm(self):
+        return "(" + "x" + (self.toStringForm(self.factor) if self.factor != 0 else "") + ")^2"
 
     def hasPerfectSquare(self):
         pass
