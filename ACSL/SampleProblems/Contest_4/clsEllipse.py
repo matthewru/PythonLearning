@@ -1,4 +1,5 @@
 from clsTrinomial import Trinomial
+import math
 class Ellipse:
 
     def __init__(self, a, b, c, d, e, f):
@@ -26,22 +27,6 @@ class Ellipse:
         self.xTrinomial = Trinomial(self.a, self.d)
         self.yTrinomial = Trinomial(self.c, self.e)
         self.constant = -(self.f) + self.xTrinomial.c + self.yTrinomial.c
-        # In completeSquare
-        # 3.1 create X trinomial
-        #  xTrinomial = Trinomial(a, b, c)
-        #  xTrinomial.completeSquare()
-        #  update constant => constant += xTrinomial.c
-        # 3.2 create Y trinomial
-        #  yTrinomial = Trinomial(a, b, c)
-        #  yTrinomial.completeSquare()
-        #  update constant => constant += yTrinomial.c
-
-    #def toStringForm(self, number):
-        #if number >= 0:
-           # numStr = " + " + str(number)
-        #else:
-            #numStr = " - " + str(0-number)
-       # return numStr
 
     def printCoefficient(self, coefficient):
         if coefficient == 1:
@@ -91,21 +76,12 @@ class Ellipse:
     def __str__(self):
         return self.generalForm()
 
+    def getCenter(self):
+        return (0 - self.xTrinomial.factor), (0 - self.yTrinomial.factor)
+
     def getMajorAxis(self):
-        # if it is circle return getMajorAxis/2
-        pass
+        xAxis = (math.sqrt(int(self.constant / self.xTrinomial.a))) * 2
+        yAxis = (math.sqrt(int(self.constant / self.yTrinomial.a))) * 2
+        majorAxis = (math.sqrt(int(self.constant / self.yTrinomial.a))) * 2 if yAxis > xAxis else (math.sqrt(int(self.constant / self.xTrinomial.a))) * 2
+        return majorAxis
 
-# Attributes a, b, c, d, e, f, xTrinomial, yTrinomial, Constant
-
-
-# functions
-# 1. isCircle
-# 2. isEllipse
-# 3. completeSquare()
-
-
-
-# 7. getMajorAxis()
-# 4. perfectSquareForm()
-# 5. standardForm()
-# 6. _str()

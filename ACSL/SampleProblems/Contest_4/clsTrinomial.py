@@ -6,8 +6,8 @@ class Trinomial:
         self.completeSquare()
 
     def completeSquare(self):
-        self.c = int((self.b / (2 * self.a)) ** 2)
-        self.factor = int(math.sqrt(self.c)) if self.b >= 0 else int(-math.sqrt(self.c))
+        self.c = (int((self.b / (2 * self.a)) ** 2)) * int(self.a)
+        self.factor = int(math.sqrt(self.c/self.a)) if self.b >= 0 else int(-math.sqrt(self.c/self.a))
         return
 
     def __str__(self):
@@ -30,10 +30,8 @@ class Trinomial:
         return self.printCoefficiantAWrapper(self.printInternalTrinomialForm())
 
     def printPerfectSquareForm(self):
-        return (str(self.a) if self.a > 1 else "") + "(" + "x" + (self.toStringForm(self.factor) if self.factor != 0 else "") + ")^2"
+        return (str(self.a) if self.a > 1 else "") + "(" + "x" + self.toStringForm(self.factor) + ")^2"
 
     def printInternalPerfectSquareForm(self):
-        return "(" + "x" + (self.toStringForm(self.factor) if self.factor != 0 else "") + ")^2"
+        return "(" + "x" + self.toStringForm(self.factor) + ")^2"
 
-    def hasPerfectSquare(self):
-        pass
