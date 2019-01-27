@@ -8,5 +8,15 @@ def testTrinomial(a, b):
     print("__str__: %s" % trinomial)
 
 
-testTrinomial(5, 50)
-
+testTrinomial(1, 4)
+testTrinomial(-1, 4)
+testTrinomial(1, -4)
+testTrinomial(-1, -4)
+testTrinomial(4, 16)
+testTrinomial(-4, 16)
+testTrinomial(4, -16)
+testTrinomial(-4, -16)
+testTrinomial(1, 6)
+testTrinomial(-1, 6)
+testTrinomial(1, -6)
+testTrinomial(-1, -6)
