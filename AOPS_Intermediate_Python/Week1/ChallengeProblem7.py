@@ -21,17 +21,26 @@ def decipher_fence(ciphertext,numRails):
     '''decipher_fence(ciphertext,numRails) -> str
     returns decoding of ciphertext using railfence cipher
     with numRails rails'''
-    railLength = math.ceil(len(ciphertext)/numRails)  #number of chars in each rail
+    railSizes = []  #gets a list of rail lengths
+    for n in range(0, numRails):
+        size = 0
+        for i in range(n, len(ciphertext), numRails):
+            size += 1
+        railSizes.append(size)
+
     rails = []
-    for n in range(len(ciphertext)-1, -1, -railLength):  #loop through length of text going backwards by railLength
-        if n > railLength:
-            rail = ciphertext[n-railLength+1:n+1]  #get each rail string
-        else:
-            rail = ciphertext[0:n+1]  #get each rail string
-        rails.append(rail)  #store in a list
+    end = len(ciphertext)
+    start = len(ciphertext) - size
+
+    for size in railSizes:
+        start = end - size
+        rail = ciphertext[start:end]  # get each rail string
+        rails.append(rail) #store in a list
+        end = end - size
+    print(rails)
 
     text = ""
-    for i in range(0, railLength):
+    for i in range(0, max(railSizes)):
         for rail in rails:
             if (i<len(rail)):
                 text += rail[i]
