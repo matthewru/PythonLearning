@@ -37,7 +37,6 @@ def decipher_fence(ciphertext,numRails):
         rail = ciphertext[start:end]  # get each rail string
         rails.append(rail) #store in a list
         end = end - size
-    print(rails)
 
     text = ""
     for i in range(0, max(railSizes)):
@@ -78,6 +77,30 @@ def decode_text(ciphertext,wordfilename):
     return decodedText
 
 # test cases
+
+# enciphering
+print(encipher_fence("abcdefghi", 3))
+# should print: cfibehadg
+print(encipher_fence("This is a test.", 2))
+# should print: hsi  etTi sats.
+print(encipher_fence("This is a test.", 3))
+# should print: iiae.h  ttTss s
+print(encipher_fence("Happy birthday to you!", 4))
+# should print: pidtopbh ya ty !Hyraou
+
+# deciphering
+print(decipher_fence("hsi  etTi sats.",2))
+# should print: This is a test.
+print(decipher_fence("iiae.h  ttTss s",3))
+# should print: This is a test.
+print(decipher_fence("pidtopbh ya ty !Hyraou",4))
+# should print: Happy birthday to you!
+
+# decoding
+print(decode_text(" cr  pvtl eibnxmo  yghu wou rezotqkofjsehad", 'wordlist.txt'))
+# should print: the quick brown fox jumps over the lazy dog
+print(decode_text("unt S.frynPs aPiosse  Aa'lgn lt noncIniha ", 'wordlist.txt'))
+# should print... we'll let you find out!
 print(encipher_fence("Happy birthday to you!", 4))
 # should print: pidtopbh ya ty !Hyraou
 
