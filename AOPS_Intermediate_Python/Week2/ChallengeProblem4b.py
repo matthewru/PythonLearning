@@ -26,10 +26,35 @@ def anagrams(inputString):
 
     anagramsList = []
     for term in perms:
-        anagramsList.append(listtoString(term))
+        word = listtoString(term)
+        if word not in anagramsList:
+            anagramsList.append(word)
 
     return anagramsList
 
-# test cases
+def jumble_solve(inputString):
+    file = open("wordlist.txt", "r")
+
+    wordList = []
+    for line in file:
+        wordList.append(line.strip())
+    file.close()
+
+    validWords = []
+
+    possibleWords = anagrams(inputString.lower())
+    for word in possibleWords:
+        if word in wordList:
+            validWords.append(word)
+    return validWords
+
+# anagrams test cases
 print(anagrams('stop'))
 print(anagrams('wisdom'))
+print(anagrams('armor'))
+
+#jumble_solve test cases
+print(jumble_solve('CHWAT'))
+print(jumble_solve('RAROM'))
+print(jumble_solve('CEPLIN'))
+print(jumble_solve('YAFLIM'))
