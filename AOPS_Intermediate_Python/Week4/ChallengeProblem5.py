@@ -62,8 +62,9 @@ class Player():
                 break
             # see if they want to reroll
             response = 'x'
-            while response.lower() not in 'yn':
-                response = input("Do you want to reroll (y/n)? ")
+            while response == None or response.lower() not in 'yn':
+                answer = input("Do you want to reroll (y/n)? ")
+                response = 'x' if answer == '' else answer
             if response.lower() == 'n':
                 break  # keeping this roll, move on the the next roll
             # they're using a reroll
@@ -87,22 +88,28 @@ def decathlon_400_meters():
     plays a multi-player version of Reiner Knizia's 400 Meters'''
     numPlayers = int(input('Enter number of players: '))
     playerList = []
-    name = 'x'
     for i in range(numPlayers):
-        while name != '' or name in playerList:
-            name = input('Player ' + str(i+1) + ', enter your name: ')
+        name = ''
+        while name == '' or name in playerList:
+            name = input('Player ' + str(i + 1) + ', enter your name: ')
         playerList.append(Player(name))
     # play the game
     for turn in range(1,5):
         print("Round " + str(turn))
         for i in range(numPlayers):
             print_scores(playerList)
-            print("%s, it is your turn" % playerList[i])
+            print("%s, it is your turn" % playerList[i].name)
             playerList[i].take_turn()
     print_scores(playerList)
     winning_score = 0
+    winner = []
     for player in playerList:
         if player.score > winning_score:
             winning_score = player.score
+            winner.append(player.name)
+    if len(winner) == 1:
+        print("%s has won the game!" % winner[0])
+        winner = []
 
+#test
 decathlon_400_meters()
