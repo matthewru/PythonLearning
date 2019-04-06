@@ -59,10 +59,7 @@ def mostFrequentNumInList(list):
 def strRolls(list):
     ans = ''
     for num in list:
-        if ans == '':
-            ans += str(num) + ' '
-        else:
-            ans += str(num) + ' '
+        ans += str(num) + ' '
     return ans
 
 def europadice():

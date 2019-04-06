@@ -39,7 +39,7 @@ class Die:
         return self.top
 
 
-class Player():
+class Player:
     def __init__(self, name, score = 0, rerolls = 5):
         self.name = name
         self.score = score
