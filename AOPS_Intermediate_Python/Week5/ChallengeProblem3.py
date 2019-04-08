@@ -19,7 +19,12 @@ class UnoCard:
     def is_match(self,other):
         '''UnoCard.is_match(UnoCard) -> boolean
         returns True if the cards match in rank or color, False if not'''
-        return (self.color == other.color) or (self.rank == other.rank)
+        if (self.color == other.color) or (self.rank == other.rank):
+            return True
+        elif self.rank == "Wild" or self.rank == "Wild Draw Four":
+            return True
+        else:
+            return False
 
 class UnoDeck:
     '''represents a deck of Uno cards
@@ -39,6 +44,8 @@ class UnoDeck:
                 self.deck.append(UnoCard("Skip", color))
                 self.deck.append(UnoCard("Reverse", color))
                 self.deck.append(UnoCard("Draw Two", color))
+            self.deck.append(UnoCard("Wild", ""))
+            self.deck.append(UnoCard("Wild Draw Four", ""))
         random.shuffle(self.deck)  # shuffle the deck
 
     def __str__(self):
@@ -101,11 +108,12 @@ class UnoPlayer:
       name: a string with the player's name
       hand: a list of UnoCards'''
 
-    def __init__(self,name,deck):
+    def __init__(self,name,deck,isComputer=True):
         '''UnoPlayer(name,deck) -> UnoPlayer
         creates a new player with a new 7-card hand'''
         self.name = name
         self.hand = [deck.deal_card() for i in range(7)]
+        self.isComputer = isComputer
 
     def __str__(self):
         '''str(UnoPlayer) -> UnoPlayer'''
@@ -162,17 +170,43 @@ class UnoPlayer:
                 # print the playable cards with their number
                 print(str(index+1) + ": " + str(matches[index]))
             # get player's choice of which card to play
-            choice = 0
-            while choice < 1 or choice > len(matches):
-                choicestr = input("Which do you want to play? ")
-                if choicestr.isdigit():
-                    choice = int(choicestr)
-            # play the chosen card from hand, add it to the pile
-            self.play_card(matches[choice-1],pile)
+            if self.isComputer == False:
+                choice = 0
+                while choice < 1 or choice > len(matches):
+                    choicestr = input("Which do you want to play? ")
+                    if choicestr.isdigit():
+                        choice = int(choicestr)
+                # play the chosen card from hand, add it to the pile
+                self.play_card(matches[choice-1],pile)
+            else:
+                action_cards = []
+                card_to_play = random.sample(matches, 1)
+                for card in matches:
+                    if card.rank == "Skip":
+                        action_cards.append(card)
+                    elif card.rank == "Wild Draw Four":
+                        action_cards.append(card)
+                    elif card.rank == "Draw Two":
+                        action_cards.append(card)
+                    elif card.rank == "Wild":
+                        action_cards.append(card)
+                    elif card.rank == "Reverse":
+                        action_cards.append(card)
+                if len(action_cards) > 0:
+                    card_to_play = random.sample(action_cards, 1)
+                else:
+                    other_color_cards = []
+                    for card in matches:
+                        if card.color != pile.top_card():
+                            other_color_cards.append(card)
+                    if len(other_color_cards) > 0:
+                        card_to_play = random.sample(other_color_cards, 1)
+                self.play_card(card_to_play, pile)
         else:  # can't play
             print("You can't play, so you have to draw.")
-            input("Press enter to draw.")
-            # check if deck is empty -- if so, reset it
+            if self.isComputer == False:
+                input("Press enter to draw.")
+                # check if deck is empty -- if so, reset it
             if deck.is_empty():
                 deck.reset_deck(pile)
             # draw a new card from the deck
@@ -183,7 +217,8 @@ class UnoPlayer:
                 self.play_card(newcard,pile)
             else:   # still can't play
                 print("Sorry, you still can't play.")
-            input("Press enter to continue.")
+            if self.isComputer == False:
+                input("Press enter to continue.")
 
 class UnoGame:
     def __init__(self, numPlayers=2):
@@ -194,6 +229,7 @@ class UnoGame:
         self.reverse = False
         self.skip = False
         self.drawTwo = False
+        self.drawFour = False
         self.currentPlayer = ''
 
     def printStatus(self):
@@ -207,7 +243,11 @@ class UnoGame:
         for n in range(self.numPlayers):
             # get each player's name, then create an UnoPlayer
             name = input('Player #' + str(n + 1) + ', enter your name: ')
-            self.players.append(UnoPlayer(name, self.deck))
+            isComputer = input('Is this player a computer (Yes/No)? ')
+            if isComputer == "Yes":
+                self.players.append(UnoPlayer(name, self.deck, True))
+            else:
+                self.players.append(UnoPlayer(name, self.deck, False))
 
     def nextPlayer(self):
         if self.reverse == False:
@@ -229,6 +269,9 @@ class UnoGame:
         elif card.rank == "Draw Two":
             self.drawTwo = True
             self.skip = True
+        elif card.rank == "Wild Draw Four":
+            self.drawFour = True
+            self.skip = True
 
     def play_uno(self):
         self.getPlayers()
@@ -240,6 +283,13 @@ class UnoGame:
             # take a turn
             self.currentPlayer.take_turn(self.deck, self.pile)
             self.actionCard(self.pile.top_card())
+            if self.pile.top_card().rank == "Wild" or self.pile.top_card().rank == "Wild Draw Four":
+                if self.currentPlayer.isComputer == False:
+                    color = input("What color would you like it to be?")
+                    self.pile.top_card().color = color
+                else:
+                    handColors = [card.color for card in self.currentPlayer.hand if card.color != ""]
+                    self.pile.top_card().color = max(set(handColors), key=handColors.count)
             # check for a winner
             if self.currentPlayer.has_won():
                 print(self.currentPlayer.get_name() + " wins!")
@@ -251,6 +301,12 @@ class UnoGame:
                 self.currentPlayer.draw_card(self.deck)
                 self.currentPlayer.draw_card(self.deck)
                 self.drawTwo == False
+            if self.drawFour == True:
+                self.currentPlayer.draw_card(self.deck)
+                self.currentPlayer.draw_card(self.deck)
+                self.currentPlayer.draw_card(self.deck)
+                self.currentPlayer.draw_card(self.deck)
+                self.drawFour == False
             if self.skip == True:
                 self.nextPlayer()
                 self.skip = False

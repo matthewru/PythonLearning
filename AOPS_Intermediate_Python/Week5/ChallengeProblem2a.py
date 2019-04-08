@@ -19,7 +19,12 @@ class UnoCard:
     def is_match(self,other):
         '''UnoCard.is_match(UnoCard) -> boolean
         returns True if the cards match in rank or color, False if not'''
-        return (self.color == other.color) or (self.rank == other.rank)
+        if (self.color == other.color) or (self.rank == other.rank):
+            return True
+        elif self.rank == "Wild":
+            return True
+        else:
+            return False
 
 class UnoDeck:
     '''represents a deck of Uno cards
@@ -39,6 +44,7 @@ class UnoDeck:
                 self.deck.append(UnoCard("Skip", color))
                 self.deck.append(UnoCard("Reverse", color))
                 self.deck.append(UnoCard("Draw Two", color))
+            self.deck.append(UnoCard("Wild", ""))
         random.shuffle(self.deck)  # shuffle the deck
 
     def __str__(self):
@@ -240,6 +246,9 @@ class UnoGame:
             # take a turn
             self.currentPlayer.take_turn(self.deck, self.pile)
             self.actionCard(self.pile.top_card())
+            if self.pile.top_card().rank == "Wild":
+                color = input("What color would you like it to be?")
+                self.pile.top_card().color = color
             # check for a winner
             if self.currentPlayer.has_won():
                 print(self.currentPlayer.get_name() + " wins!")
@@ -258,4 +267,3 @@ class UnoGame:
 numPlayers = int(input("How many players? "))
 u = UnoGame(numPlayers)
 u.play_uno()
-
