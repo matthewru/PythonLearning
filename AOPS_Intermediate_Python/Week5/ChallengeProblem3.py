@@ -165,6 +165,7 @@ class UnoPlayer:
         # get a list of cards that can be played
         topcard = pile.top_card()
         matches = [card for card in self.hand if card.is_match(topcard)]
+        card_to_play = random.sample(matches, 1)
         if len(matches) > 0:  # can play
             for index in range(len(matches)):
                 # print the playable cards with their number
@@ -201,7 +202,7 @@ class UnoPlayer:
                             other_color_cards.append(card)
                     if len(other_color_cards) > 0:
                         card_to_play = random.sample(other_color_cards, 1)
-                self.play_card(card_to_play, pile)
+                self.play_card(card_to_play.pop(), pile)
         else:  # can't play
             print("You can't play, so you have to draw.")
             if self.isComputer == False:
@@ -311,7 +312,10 @@ class UnoGame:
                 self.nextPlayer()
                 self.skip = False
 
+
 numPlayers = int(input("How many players? "))
 u = UnoGame(numPlayers)
 u.play_uno()
+
+
 
