@@ -111,7 +111,7 @@ class Player:
     def get_name(self):
         return self.name
 
-    def take_turn(self, set, chain):
+    def take_turn(self, chain):
         print(self.name + ", it's your turn.")
         print(chain)
         matches = [domino for domino in self.hand if chain.canAdd(domino)]
