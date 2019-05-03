@@ -18,7 +18,6 @@ class GUIDie(Canvas):
         # initialize the top value
         self.top = 1
 
-    tess.left(56)
     def get_top(self):
         '''GUIDie.get_top() -> int
         returns the value on the die'''
@@ -94,8 +93,10 @@ class Decath400MFrame(Frame):
         '''Decath400MFrame.roll()
         handler method for the roll button click'''
         # roll both dice
-        self.dice[2*self.gameround].roll()
-        self.dice[2*self.gameround+1].roll()
+        self.dice[4*self.gameround].roll()
+        self.dice[4*self.gameround+1].roll()
+        self.dice[4 * self.gameround + 2].roll()
+        self.dice[4 * self.gameround + 3].roll()
         # if this was the first roll of the round, turn on the keep button
         if self.keepButton['state'] == DISABLED :
             self.keepButton['state'] = ACTIVE
@@ -110,12 +111,14 @@ class Decath400MFrame(Frame):
         handler method for the keep button click'''
         # add dice to score and update the scoreboard
         self.score += self.dice[2*self.gameround].get_top() + \
-                      self.dice[2*self.gameround+1].get_top()
+                      self.dice[2*self.gameround+1].get_top() + \
+                      self.dice[2 * self.gameround + 2].get_top() + \
+                      self.dice[2 * self.gameround + 3].get_top()
         self.scoreLabel['text'] = 'Score: '+str(self.score)
         self.gameround += 1  # go to next round
-        if self.gameround < 4:  # move buttons to next pair of dice
-            self.rollButton.grid(row=2,column=2*self.gameround,columnspan=2)
-            self.keepButton.grid(row=3,column=2*self.gameround,columnspan=2)
+        if self.gameround < 2:  # move buttons to next pair of dice
+            self.rollButton.grid(row=2,column=4*self.gameround,columnspan=2)
+            self.keepButton.grid(row=3,column=4*self.gameround,columnspan=2)
             self.rollButton['state'] = ACTIVE
             self.keepButton['state'] = DISABLED
         else:  # game over
