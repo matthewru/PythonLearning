@@ -18,7 +18,6 @@ class GUIDie(Canvas):
         # initialize the top value
         self.top = 1
 
-    tess.left(56)
     def get_top(self):
         '''GUIDie.get_top() -> int
         returns the value on the die'''
