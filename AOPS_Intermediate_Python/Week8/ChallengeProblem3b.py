@@ -102,9 +102,11 @@ class DiscusFrame(Frame):
         Frame.__init__(self, master)
         self.grid()
         self.dice = []
-        self.attempt = 0
+        self.attempt = 1
         self.score = 0
         self.highScore = 0
+        self.numFrozen = 0
+        self.scores = []
         self.attempt_scoreLabel = Label(self, text="Attempt #" + str(self.attempt) + " Score: " + str(self.score))
         self.attempt_scoreLabel.grid(row=1, column=3)
         self.highScoreLabel = Label(self, text="High Score: " + str(self.highScore))
@@ -114,20 +116,25 @@ class DiscusFrame(Frame):
             self.dice.append(self.die)
         for n in range(len(self.dice)):
             self.dice[n].grid(row=2, column=n)
-        self.rollButton = Button(self, text='Roll', command=self.roll).grid(row=2,column=6)
+        self.rollButton = Button(self, text='Roll', command=self.roll)
+        self.rollButton.grid(row=2,column=6)
         self.freezeButtons = {}
         for n in range(5):
             freezeButton = Button(self, text='Freeze', command=self.dice[n].freeze)
             self.freezeButtons[self.dice[n]] = freezeButton
             self.freezeButtons[self.dice[n]]['state'] = DISABLED
             self.freezeButtons[self.dice[n]].grid(row=3, column=n)
+        self.stopButton = Button(self, text='Stop', command=self.stop)
+        self.stopButton.grid(row=3,column=6)
 
     def roll(self):
         rollValue = []
         oddCount = 0
+        oddRolls = []
         for n in range(len(self.dice)):
             if self.dice[n].isFrozen:
                 self.freezeButtons[self.dice[n]]['state'] = DISABLED
+                self.numFrozen += 1
         for n in range(len(self.dice)):
             self.dice[n].roll()
             rollValue.append(self.dice[n].get_top())
@@ -135,13 +142,39 @@ class DiscusFrame(Frame):
             if self.dice[n].get_top() == 1 or self.dice[n].get_top() == 3 or self.dice[n].get_top() == 5:
                 self.freezeButtons[self.dice[n]]['state'] = DISABLED
             else:
-                self.freezeButtons[self.dice[n]]['state'] = ACTIVE
+                if not self.dice[n].isFrozen:
+                    self.freezeButtons[self.dice[n]]['state'] = ACTIVE
         for value in rollValue:
             if value == 1 or value == 3 or value == 5:
                 oddCount += 1
-                if oddCount == 5:
-                    self.attempt_scoreLabel['text'] = "FOULED ATTEMPT"
-                    self.attempt_scoreLabel.grid(row=1, column=3)
+                #rollValue.pop(value)
+        self.score = sum(rollValue)
+        self.attempt_scoreLabel['text'] = "Attempt #" + str(self.attempt) + " Score: " + str(self.score)
+        self.attempt_scoreLabel.grid(row=1, column=3)
+        if oddCount == 5 - self.numFrozen:
+            self.attempt_scoreLabel['text'] = "FOULED ATTEMPT"
+            self.attempt_scoreLabel.grid(row=1, column=3)
+            self.score = 0
+            self.stopButton = Button(self, text='FOUL', command=self.stop)
+            self.stopButton.grid(row=3, column=6)
+            self.rollButton['state'] = DISABLED
+
+    def stop(self):
+        self.rollButton['state'] = ACTIVE
+        self.scores.append(self.score)
+        self.score = 0
+        self.attempt_scoreLabel = Label(self, text="Attempt #" + str(self.attempt) + " Score: " + str(self.score))
+        self.attempt_scoreLabel.grid(row=1, column=3)
+        self.highScore = max(self.scores)
+        self.highScoreLabel = Label(self, text="High Score: " + str(self.highScore))
+        self.highScoreLabel.grid(row=1, column=6)
+        self.attempt += 1
+        self.stopButton['text'] = "Stop"
+        self.stopButton.grid(row=3, column=6)
+        for die in self.dice:
+            die.erase()
+
+
 
 
 
