@@ -108,6 +108,7 @@ class DiscusFrame(Frame):
         self.numFrozen = 0
         self.name = name
         self.scores = []
+        self.reroll = False
         self.nameLabel = Label(self, text=name, font = ("Arial", 15))
         self.nameLabel.grid(row=1,column=0)
         self.attempt_scoreLabel = Label(self, text="Attempt #" + str(self.attempt) + " Score: " + str(self.score))
@@ -133,9 +134,7 @@ class DiscusFrame(Frame):
         self.stopButton.grid(row=3,column=6)
 
     def roll(self):
-        frozenNum = 0
         rollValues = []
-        oddCount = 0
         oddRolls = []
         for n in range(len(self.dice)):
             if self.dice[n].isFrozen:
@@ -157,7 +156,7 @@ class DiscusFrame(Frame):
             self.score = sum(rollValues) - sum(oddRolls)
             self.attempt_scoreLabel['text'] = "Attempt #" + str(self.attempt) + " Score: " + str(self.score)
             self.attempt_scoreLabel.grid(row=1, column=3)
-            if len(oddRolls) == len(rollValues) - self.numFrozen:
+            if len(oddRolls) == len(rollValues) - self.num_of_frozen_button():
                 self.attempt_scoreLabel['text'] = "FOULED ATTEMPT"
                 self.attempt_scoreLabel.grid(row=1, column=3)
                 self.score = 0
@@ -165,11 +164,10 @@ class DiscusFrame(Frame):
                 self.stopButton.grid(row=3, column=6)
                 self.rollButton['state'] = DISABLED
             self.pastnumFrozen = self.numFrozen
-            print(self.numFrozen)
         else:
             self.lowerLabel['text'] = "You must freeze a dice to reroll"
-
         self.numFrozen = self.num_of_frozen_button()
+        self.reroll = True
 
     def stop(self):
         self.numFrozen = 0
@@ -188,6 +186,9 @@ class DiscusFrame(Frame):
             self.highScoreLabel = Label(self, text="High Score: " + str(self.highScore))
             self.highScoreLabel.grid(row=1, column=6)
             self.attempt += 1
+            self.attempt_scoreLabel['text'] = "Attempt #" + str(self.attempt) + " Score: " + str(self.score)
+            self.attempt_scoreLabel.grid(row=1, column=3)
+            self.reroll = False
             self.stopButton['text'] = "Stop"
             self.stopButton.grid(row=3, column=6)
             for die in self.dice:
@@ -210,10 +211,12 @@ class DiscusFrame(Frame):
         return numFrozen
 
     def can_roll(self):
-        frozenNum = self.num_of_frozen_button()
-        if self.numFrozen > 0 and frozenNum > 0:
-            if (frozenNum == self.numFrozen):
+        if self.reroll:
+            frozenNum = self.num_of_frozen_button()
+            if frozenNum == self.numFrozen:
                 return False
+            else:
+                return True
         return True
 
 name = input("What's your name? ")
